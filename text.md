@@ -1456,6 +1456,7 @@ $$
 R(B)
 =
 \Psi
+=
 (
 R_1(D_1),
 R_2(D_2),
@@ -2675,6 +2676,7 @@ Escrevendo explicitamente,
 
 $$
 d_R
+=
 (x_1,x_2)
 =
 d(
@@ -2813,6 +2815,7 @@ deve ocorrer
 
 $$
 d
+=
 (
 \Gamma(t),
 \Gamma(t+\Delta t)
@@ -3361,6 +3364,7 @@ $$
 P_{ij}
 =
 P
+=
 (
 F_j
 \mid
@@ -3658,6 +3662,7 @@ $$
 R_{t+1}
 =
 U
+=
 (
 R_t,
 O_{t+1}
@@ -3767,6 +3772,7 @@ $$
 P_{ij}
 =
 P
+=
 (
 F_j
 \mid
@@ -3863,6 +3869,7 @@ $$
 \Gamma'
 =
 U
+=
 (
 \Gamma,
 O_{novo}
@@ -4842,6 +4849,7 @@ $$
 D_i
 =
 f
+=
 (
 O_1,
 O_2,
@@ -4894,6 +4902,7 @@ $$
 D_L
 =
 f
+=
 (
 O_{Lab},
 O_{Imagem},
@@ -5268,6 +5277,7 @@ $$
 \arg\min_{\tau}
 \;
 L
+=
 (
 \Gamma_\tau
 ),
@@ -5319,6 +5329,7 @@ $$
 R_{novo}
 =
 U
+=
 (
 R,
 O_{novo}
@@ -5341,6 +5352,7 @@ $$
 \Gamma'
 =
 U
+=
 (
 \Gamma,
 O_{novo}
