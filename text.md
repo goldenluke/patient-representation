@@ -1,3 +1,5 @@
+# Fundamentos Matemáticos da Representação Computacional de Sistemas Biológicos - Um Meta-Modelo para Medicina Computacional de Precisão
+
 # 1. Introdução
 
 A medicina contemporânea produz uma quantidade de dados sem precedentes. Prontuários eletrônicos, exames laboratoriais, sinais fisiológicos contínuos, imagens médicas, dispositivos vestíveis e dados ômicos passaram a descrever o paciente em uma resolução anteriormente inalcançável. Paralelamente, os avanços em aprendizado de máquina e inteligência artificial permitiram explorar esse volume crescente de informações para tarefas como diagnóstico, estratificação de risco, descoberta de fenótipos e apoio à decisão clínica.
