@@ -8,116 +8,78 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
 <style>
-body{
-    margin:0;
-    background:#efefef;
-    color:#222;
-    font-family:Georgia,serif;
-}
-#container{
-    max-width:950px;
-    margin:40px auto;
-    background:#fff;
-    padding:60px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-    border-radius:10px;
-}
-h1,h2,h3,h4{
-    color:#111;
-    margin-top:2em;
-}
-p,li{
-    line-height:1.8;
-    text-align:justify;
-}
-pre{
-    background:#f6f6f6;
-    padding:1rem;
-    overflow:auto;
-    border-radius:8px;
-}
-code{
-    font-family:Consolas,monospace;
-}
-blockquote{
-    border-left:4px solid #bbb;
-    padding-left:1rem;
-    color:#555;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-th,td{
-    border:1px solid #ddd;
-    padding:.5rem;
-}
+body{margin:0;background:#efefef;color:#222;font-family:Georgia,serif}
+#content{max-width:900px;margin:40px auto;background:#fff;padding:60px;
+box-shadow:0 8px 24px rgba(0,0,0,.08);border-radius:10px}
+h1,h2,h3{margin-top:2em}
+p,li{line-height:1.8;text-align:justify}
+pre{background:#f6f6f6;padding:1rem;border-radius:6px;overflow:auto}
+code{font-family:Consolas,monospace}
+blockquote{border-left:4px solid #bbb;padding-left:1rem;color:#555}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ddd;padding:.5rem}
 img{max-width:100%}
-.katex-display{
-    overflow-x:auto;
-    margin:1.5rem 0;
-}
-#error{color:#b00020;white-space:pre-wrap}
+.MathJax_Display,.mjx-container{overflow-x:auto}
 </style>
-</head>
-<body>
-
-<div id="container">
-<div id="content">Carregando artigo...</div>
-</div>
 
 <script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$','$']],
-    displayMath: [['$$','$$']],
-    processEscapes: true
-  },
-  svg: {
-    fontCache: 'global'
-  }
+window.MathJax={
+ tex:{
+  inlineMath:[['$','$']],
+  displayMath:[['$$','$$']],
+  processEscapes:true
+ },
+ svg:{fontCache:'global'}
 };
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+</head>
+<body>
+
+<div id="content">Carregando...</div>
 
 <script>
-const md = window.markdownit({
-    html:true,
-    linkify:true,
-    typographer:true
-});
 
 async function carregar(){
 
-    try{
+ const r=await fetch("text.md");
+ const original=await r.text();
 
-        const response = await fetch("./text.md");
+ let texto=original;
+ const blocos=[];
 
-        if(!response.ok){
-            throw new Error("Não foi possível carregar text.md");
-        }
+ texto=texto.replace(/\$\$([\s\S]*?)\$\$/g,function(m){
+    const id=blocos.length;
+    blocos.push(m);
+    return "@@MATH"+id+"@@";
+ });
 
-        const markdown = await response.text();
+ texto=texto.replace(/\$(?!\$)([^\n]+?)(?<!\$)\$/g,function(m){
+    const id=blocos.length;
+    blocos.push(m);
+    return "@@MATH"+id+"@@";
+ });
 
-        const area = document.getElementById("content");
-        area.innerHTML = md.render(markdown);
+ let html=marked.parse(texto);
 
-        if(window.MathJax){
-            await MathJax.typesetPromise([area]);
-        }
+ html=html.replace(/@@MATH(\d+)@@/g,function(_,i){
+    return blocos[Number(i)];
+ });
 
-    }catch(e){
+ const area=document.getElementById("content");
+ area.innerHTML=html;
 
-        document.getElementById("content").innerHTML =
-        "<h2>Erro</h2><div id='error'>"+e+"</div><p>Se estiver abrindo pelo file://, publique no GitHub Pages ou execute um servidor HTTP local.</p>";
-
-    }
+ await MathJax.typesetPromise([area]);
 
 }
 
-window.addEventListener("load",carregar);
+carregar().catch(e=>{
+ document.getElementById("content").innerHTML="<h2>Erro</h2><pre>"+e+"</pre>";
+});
+
 </script>
 
 </body>
