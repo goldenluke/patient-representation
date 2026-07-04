@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
 
 <meta charset="UTF-8">
@@ -8,57 +7,107 @@
 
 <title>Artigo</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown.min.css">
 
 <link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/github-markdown-css/github-markdown.min.css">
+href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
 <style>
 
 body{
-    background:#f5f5f5;
+    margin:0;
+    background:#ececec;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 }
 
-.markdown-body{
+#container{
 
-    max-width:900px;
+    max-width:960px;
 
-    margin:auto;
+    margin:40px auto;
 
     background:white;
 
     padding:60px;
 
-    border-radius:16px;
+    border-radius:12px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    box-shadow:0 5px 25px rgba(0,0,0,.08);
+}
+
+.markdown-body{
+
+    background:white;
+}
+
+.markdown-body h1{
+
+    border-bottom:none;
+
+    padding-bottom:0;
+}
+
+.markdown-body img{
+
+    max-width:100%;
+}
+
+.markdown-body table{
+
+    width:100%;
 }
 
 .katex-display{
 
     overflow-x:auto;
+
+    overflow-y:hidden;
+
+    margin:2rem 0;
+}
+
+.loading{
+
+    text-align:center;
+
+    color:#666;
+
+    font-size:18px;
+
+    padding:100px;
+}
+
+.error{
+
+    color:#d00;
+
+    white-space:pre-wrap;
+
+    font-family:monospace;
 }
 
 </style>
 
 </head>
 
-<body class="py-12">
+<body>
 
-<article
-id="content"
-class="markdown-body">
+<div id="container">
 
+<div id="content" class="markdown-body">
+
+<div class="loading">
 Carregando artigo...
+</div>
 
-</article>
+</div>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
 
@@ -66,27 +115,25 @@ Carregando artigo...
 
 const md = window.markdownit({
 
-html:true,
+    html:true,
 
-linkify:true,
+    linkify:true,
 
-typographer:true
+    typographer:true
 
-})
+}).use(texmath,{
 
-.use(texmath,{
+    engine:katex,
 
-engine:katex,
+    delimiters:"dollars",
 
-delimiters:"dollars",
+    katexOptions:{
 
-katexOptions:{
+        throwOnError:false,
 
-throwOnError:false,
+        strict:false
 
-strict:false
-
-}
+    }
 
 });
 
@@ -94,11 +141,11 @@ async function carregar(){
 
     try{
 
-        const response = await fetch("./text.md");
+        const response = await fetch("text.md");
 
         if(!response.ok){
 
-            throw new Error(response.status);
+            throw new Error("Não foi possível carregar text.md");
         }
 
         const markdown = await response.text();
@@ -109,12 +156,9 @@ async function carregar(){
 
     catch(e){
 
-        document.getElementById("content").innerHTML = `
-            <h2>Erro</h2>
-            <p>Não foi possível carregar <strong>text.md</strong>.</p>
-            <p>Se estiver testando localmente, execute um servidor HTTP.</p>
-            <pre>${e}</pre>
-        `;
+        document.getElementById("content").innerHTML =
+
+        '<div class="error">'+e+'</div>';
 
     }
 
@@ -125,5 +169,4 @@ carregar();
 </script>
 
 </body>
-
 </html>
