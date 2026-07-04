@@ -1,171 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Artigo</title>
 
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown.min.css">
-
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
 <style>
-
 body{
     margin:0;
-    background:#ececec;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:#efefef;
+    color:#222;
+    font-family:Georgia,serif;
 }
-
 #container{
-
-    max-width:960px;
-
+    max-width:950px;
     margin:40px auto;
-
-    background:white;
-
+    background:#fff;
     padding:60px;
-
-    border-radius:12px;
-
-    box-shadow:0 5px 25px rgba(0,0,0,.08);
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    border-radius:10px;
 }
-
-.markdown-body{
-
-    background:white;
+h1,h2,h3,h4{
+    color:#111;
+    margin-top:2em;
 }
-
-.markdown-body h1{
-
-    border-bottom:none;
-
-    padding-bottom:0;
+p,li{
+    line-height:1.8;
+    text-align:justify;
 }
-
-.markdown-body img{
-
-    max-width:100%;
+pre{
+    background:#f6f6f6;
+    padding:1rem;
+    overflow:auto;
+    border-radius:8px;
 }
-
-.markdown-body table{
-
+code{
+    font-family:Consolas,monospace;
+}
+blockquote{
+    border-left:4px solid #bbb;
+    padding-left:1rem;
+    color:#555;
+}
+table{
     width:100%;
+    border-collapse:collapse;
 }
-
+th,td{
+    border:1px solid #ddd;
+    padding:.5rem;
+}
+img{max-width:100%}
 .katex-display{
-
     overflow-x:auto;
-
-    overflow-y:hidden;
-
-    margin:2rem 0;
+    margin:1.5rem 0;
 }
-
-.loading{
-
-    text-align:center;
-
-    color:#666;
-
-    font-size:18px;
-
-    padding:100px;
-}
-
-.error{
-
-    color:#d00;
-
-    white-space:pre-wrap;
-
-    font-family:monospace;
-}
-
+#error{color:#b00020;white-space:pre-wrap}
 </style>
-
 </head>
-
 <body>
 
 <div id="container">
-
-<div id="content" class="markdown-body">
-
-<div class="loading">
-Carregando artigo...
+<div id="content">Carregando artigo...</div>
 </div>
-
-</div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
 
 <script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$','$']],
+    displayMath: [['$$','$$']],
+    processEscapes: true
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
 
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<script>
 const md = window.markdownit({
-
     html:true,
-
     linkify:true,
-
     typographer:true
-
-}).use(texmath,{
-
-    engine:katex,
-
-    delimiters:"dollars",
-
-    katexOptions:{
-
-        throwOnError:false,
-
-        strict:false
-
-    }
-
 });
 
 async function carregar(){
 
     try{
 
-        const response = await fetch("text.md");
+        const response = await fetch("./text.md");
 
         if(!response.ok){
-
             throw new Error("Não foi possível carregar text.md");
         }
 
         const markdown = await response.text();
 
-        document.getElementById("content").innerHTML = md.render(markdown);
+        const area = document.getElementById("content");
+        area.innerHTML = md.render(markdown);
 
-    }
+        if(window.MathJax){
+            await MathJax.typesetPromise([area]);
+        }
 
-    catch(e){
+    }catch(e){
 
         document.getElementById("content").innerHTML =
-
-        '<div class="error">'+e+'</div>';
+        "<h2>Erro</h2><div id='error'>"+e+"</div><p>Se estiver abrindo pelo file://, publique no GitHub Pages ou execute um servidor HTTP local.</p>";
 
     }
 
 }
 
-carregar();
-
+window.addEventListener("load",carregar);
 </script>
 
 </body>
